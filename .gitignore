@@ -30,3 +30,13 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+/server/protodata/routes.generated.go
+/server/protodata/shapes.generated.go 
+/server/protodata/stop_times_by_stop.generated.go
+/server/protodata/stop_times_by_trip.generated.go
+/server/protodata/stops.generated.go
+/server/protodata/trips.generated.go
+
+
+

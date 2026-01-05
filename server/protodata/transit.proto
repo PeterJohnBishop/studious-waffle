@@ -1,0 +1,174 @@
+edition = "2023";
+
+package transit.v1;
+
+option go_package = "github.com/peterbishop/studious-waffle/server/protodata";
+
+// static GTFS data
+
+message TripProto {
+  string route_id = 1;
+  string service_id = 2;
+  string trip_id = 3;
+  string trip_headsign = 4;
+  int32 direction_id = 5;
+  string block_id = 6;
+  string shape_id = 7;
+}
+
+message RouteProto {
+  string route_id = 1;
+  string agency_id = 2;
+  string route_short_name = 3;
+  string route_long_name = 4;
+  string route_desc = 5;
+  int32 route_type = 6;
+  string route_url = 7;
+  string route_color = 8;
+  string route_text_color = 9;
+}
+
+message ShapeProto {
+  string shape_id = 1;
+  double shape_pt_lat = 2;
+  double shape_pt_lon = 3;
+  int32 shape_pt_sequence = 4;
+  double shape_dist_traveled = 5;
+}
+
+message StopProto {
+  string stop_id = 1;
+  string stop_code = 2;
+  string stop_name = 3;
+  string stop_desc = 4;
+  double stop_lat = 5;
+  double stop_lon = 6;
+  string zone_id = 7;
+  string stop_url = 8;
+  int32 location_type = 9;
+  string parent_station = 10;
+  string stop_timezone = 11;
+  int32 wheelchair_boarding = 12;
+}
+
+message StopTimeProto {
+  string trip_id = 1;
+  string arrival_time = 2;
+  string departure_time = 3;
+  string stop_id = 4;
+  int32 stop_sequence = 5;
+  string stop_headsign = 6;
+  int32 pickup_type = 7;
+  int32 drop_off_type = 8;
+  double shape_dist_traveled = 9;
+  int32 timepoint = 10;
+}
+
+// realtime data feed
+
+message AlertEntityProto {
+  string id = 1;
+  AlertProto alert = 2;
+}
+
+message AlertProto {
+  repeated ActivePeriodProto active_period = 1;
+  repeated InformedEntityProto informed_entity = 2;
+  int32 cause = 3;
+  int32 effect = 4;
+  TranslatedStringProto header_text = 5;
+  TranslatedStringProto description_text = 6;
+}
+
+message ActivePeriodProto {
+  int64 start = 1;
+  int64 end = 2; 
+}
+
+message InformedEntityProto {
+  string agency_id = 1;
+  string route_id = 2;
+  int32 route_type = 3;
+  string stop_id = 4;
+}
+
+message TranslatedStringProto {
+  repeated TranslationProto translation = 1;
+}
+
+message TranslationProto {
+  string text = 1;
+  string language = 2;
+}
+
+message TripUpdateEntityProto {
+  string id = 1;
+  TripUpdateProto trip_update = 2;
+}
+
+message TripUpdateProto {
+  TripDescriptorProto trip = 1;
+  VehicleDescriptorProto vehicle = 2;
+  repeated StopTimeUpdateProto stop_time_update = 3;
+  int64 timestamp = 4;
+}
+
+message TripDescriptorProto {
+  string trip_id = 1;
+  string route_id = 2;
+  int32 direction_id = 3;
+  int32 schedule_relationship = 4; 
+}
+
+message VehicleDescriptorProto {
+  string id = 1;
+  string label = 2;
+}
+
+message StopTimeUpdateProto {
+  int32 stop_sequence = 1;
+  string stop_id = 2;
+  StopTimeEventProto arrival = 3;
+  StopTimeEventProto departure = 4;
+  int32 schedule_relationship = 5;
+}
+
+message StopTimeEventProto {
+  int64 time = 1;
+}
+
+message VehiclePositionEntityProto {
+  string id = 1;
+  VehiclePositionProto vehicle = 2;
+}
+
+message VehiclePositionProto {
+  TripDescriptorProto trip = 1;
+  VehicleDescriptorProto vehicle = 2;
+  GeoPositionProto position = 3;
+  string stop_id = 4;
+  int32 current_status = 5;
+  int64 timestamp = 6;
+  int32 occupancy_status = 7;
+}
+
+message GeoPositionProto {
+  double latitude = 1;
+  double longitude = 2;
+  double bearing = 3;
+}
+
+message VehiclePositionCollection {
+  repeated VehiclePositionEntityProto entities = 1;
+  int64 timestamp = 2;
+}
+
+message AlertCollection {
+  repeated AlertEntityProto entities = 1;
+  int64 timestamp = 2;
+}
+
+message TripUpdateCollection {
+  repeated TripUpdateEntityProto entities = 1;
+  int64 timestamp = 2;
+}
